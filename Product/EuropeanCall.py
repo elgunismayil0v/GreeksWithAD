@@ -11,19 +11,16 @@ class EuropeanCall(Product):
         self.K = K
         
         
-    def discounted_payoff(self, paths : tt.Tensor, r: float, T: float) -> tt.Tensor:
+    def payoff(self, paths : tt.Tensor) -> tt.Tensor:
         """
-        Calculate the discounted payoff of a European Call option.
+        Calculate the  payoff of a European Call option.
 
         Parameters:
         paths : torch.Tensor A tensor of shape (M, N+1) containing the simulated paths.
-        r : float The risk-free interest rate.
-        T : float The time to maturity.
 
         Returns:
-        torch.Tensor A tensor of shape (M,) containing the discounted payoffs.
+        torch.Tensor A tensor of shape (M,) containing the payoffs.
         """
-        NoOfPaths = paths.shape[0]
-        discount_payoff = tt.clamp(paths[:, -1] - self.K, min=0) / NoOfPaths * tt.exp(-r * T)
-        return discount_payoff
+        payoff = tt.clamp(paths[:, -1] - self.K, min=0)
+        return payoff
         
