@@ -1,4 +1,4 @@
-from Base import Product
+from Product.Base import Product
 import torch as tt
 
 class EuropeanCall(Product):

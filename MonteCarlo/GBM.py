@@ -1,5 +1,6 @@
-from Base import MonteCarloSimulator
+from MonteCarlo.Base import MonteCarloSimulator
 import torch as tt
+import numpy as np
 
 class GBM(MonteCarloSimulator):
     def __init__(self, T : float, r : float, sigma : float, device : str = 'cpu'):
@@ -24,11 +25,12 @@ class GBM(MonteCarloSimulator):
         Returns:
         torch.Tensor A tensor of shape (M, N+1) containing the simulated paths.
         """
-        dt = self.T / NoOfSteps
+        dt = tt.tensor(self.T / NoOfSteps, dtype=tt.float64, device=self.device)
         S = tt.zeros((NoOfPaths, NoOfSteps + 1), dtype=tt.float64)
         S[:, 0] = S0
         for i in range(1, NoOfSteps + 1):
             Z = tt.randn(NoOfPaths, dtype=tt.float64, device=self.device)
-            S[:, i] = S[:, i - 1] * tt.exp((self.r - 0.5 * self.sigma ** 2) * dt + self.sigma * tt.sqrt(dt) * Z)
+            S[:, i] = S[:, i - 1] * tt.exp(
+            (self.r - 0.5 * self.sigma ** 2) * dt +self.sigma * tt.sqrt(dt) * Z)
             
         return S
